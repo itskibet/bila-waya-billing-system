@@ -1,6 +1,6 @@
 # Bila Waya Billing System
 
-*Bila waya* is Swahili for "without wires". This is a WiFi billing system for hotspots in Kenya: customers connect to your WiFi, pick a package, pay with **M-Pesa STK Push**, and the system unlocks their device on your **MikroTik** router for exactly the time they paid for, then locks it again.
+This is a WiFi billing system for hotspots in Kenya: customers connect to your WiFi, pick a package, pay with **M-Pesa STK Push**, and the system unlocks their device on your **MikroTik** router for exactly the time they paid for, then locks it again.
 
 Built with Node.js + Express, Prisma + MySQL, and a Next.js portal and admin dashboard.
 
