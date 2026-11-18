@@ -1,0 +1,69 @@
+// Prisma schema for Bila Waya Billing System
+// Set DATABASE_URL in .env, then run: npm run db:push
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+}
+
+model User {
+  id             Int       @id @default(autoincrement())
+  phone          String    @unique
+  macAddress     String
+  // active | expired | blocked
+  status         String    @default("expired")
+  currentPackage String?
+  expiresAt      DateTime?
+  totalSpent     Int       @default(0)
+  sessionsCount  Int       @default(0)
+  lastSeen       DateTime?
+  payments       Payment[]
+}
+
+model Payment {
+  id                Int       @id @default(autoincrement())
+  phone             String
+  amount            Int
+  packageKey        String
+  durationMinutes   Int
+  transactionId     String    @unique
+  // Safaricom CheckoutRequestID, used to match the callback
+  checkoutRequestId String?   @unique
+  // Safaricom MpesaReceiptNumber, set once paid
+  mpesaReceipt      String?
+  macAddress        String
+  // pending | processing | completed | failed | provision_failed
+  status            String
+  timePurchased     DateTime  @default(now())
+  expiresAt         DateTime?
+  // set when access was removed from the router after expiry
+  revokedAt         DateTime?
+  userId            Int?
+  user              User?     @relation(fields: [userId], references: [id])
+
+  @@index([status])
+  @@index([macAddress])
+  @@index([phone])
+  @@index([expiresAt])
+}
+
+model SupportRequest {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String?
+  phone     String
+  subject   String?
+  message   String   @db.Text
+  status    String   @default("open")
+  createdAt DateTime @default(now())
+}

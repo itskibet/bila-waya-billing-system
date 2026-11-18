@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--
+  MikroTik hotspot login page for Bila Waya.
+
+  Upload this file to the router as hotspot/login.html (replacing the default one).
+  When a customer without access opens any website, MikroTik shows this page and fills in
+  $(mac) and $(ip). It immediately sends them to the Bila Waya payment portal, passing the
+  device MAC so the portal knows which device to unlock after payment.
+
+  Edit PORTAL_URL below to your deployed frontend address.
+  Also add your portal and API domains to the hotspot "walled garden"
+  (IP > Hotspot > Walled Garden) so customers can reach them before paying, as well as
+  Safaricom's domains if you want the M-Pesa prompt page assets to load.
+-->
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bila Waya WiFi</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 40px 20px; color: #1e293b; }
+  </style>
+</head>
+<body>
+  <h2>Bila Waya WiFi</h2>
+  <p>Taking you to the payment page&hellip;</p>
+  <p><a id="manual" href="#">Tap here if nothing happens</a></p>
+
+  <script>
+    var PORTAL_URL = "https://portal.yourdomain.com";
+
+    // MikroTik replaces these three tokens before sending the page to the customer
+    var mac = "$(mac)";
+    var ip = "$(ip)";
+
+    var url = PORTAL_URL + "/?mac=" + encodeURIComponent(mac) + "&ip=" + encodeURIComponent(ip);
+    document.getElementById("manual").href = url;
+    window.location.replace(url);
+  </script>
+</body>
+</html>
